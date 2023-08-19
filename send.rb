@@ -28,12 +28,25 @@
 require 'bunny'
 require 'json'
 
-connection = Bunny.new(automatically_recover: false)
+# connection = Bunny.new(automatically_recover: false)
+connection = Bunny.new(
+  host: "ec2-18-212-82-38.compute-1.amazonaws.com",
+  port: 5672,
+  user: "novo-fidc",
+  password: "rgvrgbtrgb35",
+  vhost: "novo-fidc"
+)
 connection.start
 
 channel = connection.create_channel
 product = { name: "Xbox", unity: "UN" }
-queue = channel.queue('hello')
+message = {
+  "number": "002",
+  "name": "Banco Teste S.A.",
+  "description": "Banco Teste S.A.",
+  "active": true
+}
+queue = channel.queue('remittance-manager-info', durable: true)
 
 channel.default_exchange.publish(product.to_json, routing_key: queue.name)
 puts " [x] Sent 'Hello World!'"

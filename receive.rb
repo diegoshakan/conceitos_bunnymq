@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'bunny'
-# require 'json'
+require 'json'
 
 # class Stock
 #   attr_reader :product
@@ -14,11 +14,19 @@ require 'bunny'
 #   end
 # end
 
-connection = Bunny.new(automatically_recover: false)
+FUND_FILES_TO_VALIDATE_QUEUE = 'fund-files-to-validate'.freeze
+
+connection = Bunny.new(
+  host: "ec2-18-212-82-38.compute-1.amazonaws.com",
+  port: 5672,
+  user: "novo-fidc",
+  password: "rgvrgbtrgb35",
+  vhost: "novo-fidc"
+)
 connection.start
 
 channel = connection.create_channel
-queue = channel.queue('hello')
+queue = channel.queue(FUND_FILES_TO_VALIDATE_QUEUE, durable: true)
 
 
 
@@ -30,7 +38,7 @@ begin
     # @body = JSON.parse(body)
     # item = Stock.new(@body).create_stock
 
-    # puts item
+    puts body
   end
 rescue Interrupt => _
   connection.close
