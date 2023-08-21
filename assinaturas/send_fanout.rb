@@ -9,7 +9,6 @@ connection.start
 channel = connection.create_channel
 
 exchange = channel.fanout('logs')
-# exchange = channel.direct('logs') verify tutorial 4
 exchange.publish(product)
 
 puts " [x] Sent 'Hello World!'"
